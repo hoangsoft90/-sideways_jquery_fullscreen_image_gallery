@@ -376,5 +376,5 @@ jQuery(window).ready(function(){
 		
 		$('#images_list').append('<a href="'+src+'" class="thumb_link"><span class="selected"></span><img src="'+thumb+'" title="" alt="" class="thumb" /></a>');
 	});
-	//_load();
+	if(typeof gallery_init=='function') gallery_init();
 });
