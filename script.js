@@ -32,8 +32,8 @@ function prepare_gui(title, description) {
 	
 	bg.append('<div id="nextimage_tip">Click for next image</div>');
 	
-	$('body').append(wrap);
-	$('body').append(bg);
+	$('.main-content').append(wrap);
+	$('.main-content').append(bg);
 	
 	setTimeout(_load, 500);
 }	
