@@ -23,7 +23,7 @@ function prepare_gui(title, description) {
 	content.append('<div id="images_list"></div>');
 	content.append('<p class="clear"></p>');
 	//bg
-	var img = $('<img>',{src:'https://hoangsoft90.github.io/-sideways_jquery_fullscreen_image_gallery/imgs/space/Universe_and_planets_digital_art_wallpaper_lucernarium.jpg',id: 'bgimg'});
+	var img = $('<img>',{src:'https://lh3.googleusercontent.com/LJCm9RgCjDuI2wYSDMemH2pK8s5R9yX98Q9Qi0SS5Vfudz2wvb6gBwcRuYTCDiRlgHSY1nWMR-V43cHA46pjSNMQX4QSAbELSoPmkXt-c7fBIVTUZ1vnCYs4ZD9p2A9U15EAavibnV6NKqQikifj0knN2NFX4TDreluktOLae5svS2EmGGsLr7a6ng0mVdQgnkVnlnRj3nOpCCXYAlhLTUbJvbgaLQL5XF9LOnqMs7E3jiD1yYEFOC8rSlUvkMK0DAM2HQVr5eEOqka3ReXGaCOm6SUM1s_vkEuBXr8N0kq3MkTDJq-94O2ZJ3VHqLf-lX_REa_WC1Hh3xZGGqK_pDhgatCpJtzBdFepolkryY4lnbbJoR0BksW8CxwpdxEH9QzPoMQAnY0exany-YqKvR5YwzitTnPamMXZFIcGNu_d1_AIDnLTn5ydVmZJ6KsqnhtKDXx_vqk6sv-AKYyDX05jE2n9O6WmFwUFVlIdjpH0y3AFoSjaE4oQVKyshSHQcq4NmQFWordC56LTdqy2In2CJo89r6CpJ59ehVvPdQsw-MUvbn0xf5xF9f5V8wLplQMwOrGgUaTtLvLWkSU_ypy5kCU3o0Zm-E1Opy752GdMfwBWH1-B=w959-h599-no',id: 'bgimg'});
 	bg.append(img);
 	
 	bg.append('<div id="preloader"><img src="https://hoangsoft90.github.io/-sideways_jquery_fullscreen_image_gallery/ajax-loader_dark.gif" width="32" height="32" align="absmiddle" />LOADING...</div>');
@@ -32,16 +32,19 @@ function prepare_gui(title, description) {
 	
 	bg.append('<div id="nextimage_tip">Click for next image</div>');
 	
-	$('.main-content').append(wrap);
-	$('.main-content').append(bg);
+	wrap.insertAfter('.main-content');
+	bg.insertAfter('.main-content');
 	
-	setTimeout(_load, 500);
+	
 }	
 
 //$(window).load(function() {
-function _load(){
-	//prepare_gui('theme1', 'mo ta');
-	
+function _load(callback, next){
+	if(!next) {
+		
+		prepare_gui('theme1', 'mo ta');
+		setTimeout(function(){_load(callback, 1);}, 100);
+	}
 //set default view mode
 	$defaultViewMode="full"; //full (fullscreen background), fit (fit to window), original (no scale)
 	//cache vars
@@ -61,6 +64,8 @@ function _load(){
 	$customScrollBox_content=$("#customScrollBox .content");
 	$dragger_container=$("#dragger_container");
 	$dragger=$("#dragger");
+	
+	console.log($outer_container_a.length);
 	
 	CustomScroller();
 	
@@ -247,6 +252,7 @@ function _load(){
 			ImageViewMode("full");
 		}
 	});
+	if(typeof callback=='function') callback();
 }
 //});
 	
@@ -367,14 +373,18 @@ $.each(images, function(i) {
 });
 
 jQuery(window).ready(function(){
-	prepare_gui('theme1', 'mo ta');
 	
-	$('#images img').each(function() {
-		var src = $(this).attr('src');
-		var thumb = src.replace(src.match(/\/s(\d+)\//g)[0], '/s150/');
-		src = src.replace(src.match(/\/s(\d+)\//g)[0], '/s1600/');
-		
-		$('#images_list').append('<a href="'+src+'" class="thumb_link"><span class="selected"></span><img src="'+thumb+'" title="" alt="" class="thumb" /></a>');
+	_load(function() {
+		$('.main-content img').each(function() {
+			var src = $(this).attr('src');
+			if(!src.match(/\/s(\d+)\//g)) return;
+			
+			var thumb = src.replace(src.match(/\/s(\d+)\//g)[0], '/s150/');
+			src = src.replace(src.match(/\/s(\d+)\//g)[0], '/s1600/');
+			
+			$('#images_list').append('<a href="'+src+'" class="thumb_link"><span class="selected"></span><img src="'+thumb+'" title="" alt="" class="thumb" /></a>');
+			console.log('add',src, $('#images_list').length);
+		});
+		if(typeof gallery_init=='function') gallery_init();
 	});
-	if(typeof gallery_init=='function') gallery_init();
 });
